@@ -1,4 +1,28 @@
-# polygon_search/error_utils.py
+"""
+error_utilities.py
+Author: Roger Erismann
+
+Purpose:
+---------
+Centralized error handling utilities for logging and debugging during pipeline operations.
+
+Key Features:
+-------------
+- `handle_error()`: Generic function to log and return user-friendly error messages.
+- `handle_errors()`: Decorator to wrap functions with standardized try/except behavior and helpful logging.
+
+Usage Examples:
+---------------
+# Use the decorator to wrap pipeline steps:
+@handle_errors("loading CSV", "Verify the file path and format are correct")
+def load_data(...): ...
+
+# Use the function manually inside exception blocks:
+try:
+    ...
+except Exception as e:
+    msg = handle_error(e, "model training", "Check model config and data", logger)
+"""
 
 import functools
 
