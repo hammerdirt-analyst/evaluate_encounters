@@ -150,7 +150,7 @@ All filenames include:
 * pandas
 * numpy
 * scikit-learn
-* xgboost
+* xgboost-cpu
 
 ## Utilities
 
