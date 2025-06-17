@@ -157,6 +157,7 @@ def csv_to_dataframe(csv_path: str = None) -> pd.DataFrame:
         csv_path = "data/g70_obs_2015_2022.csv"
     logger.info(f"Reading {csv_path}")
     return pd.read_csv(csv_path)
+
 @handle_errors("splitting data", "there are two methods 'date' and 'random', ensure you have supplied the appropriate arguments")
 def split_data(df, method="date", *, date_column="date", date_split="2022-01-01", test_size=0.2, random_state=42):
     if method == "date":
@@ -168,6 +169,7 @@ def split_data(df, method="date", *, date_column="date", date_split="2022-01-01"
     else:
         raise ValueError("Unsupported split method. Choose 'date' or 'random'.")
     return train_df, test_df
+
 @handle_errors("summarizing a data frame", "did you supply a pands df, is there a pcs/m column")
 def data_summary(df: pd.DataFrame) -> pd.DataFrame:
     logger.info(f"Summary of data frame: {df.shape}")

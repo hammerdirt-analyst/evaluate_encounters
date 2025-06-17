@@ -49,14 +49,53 @@ config = {
     "split_name": "date_split",
     "thresholds": [1, 2, 3],
     "threshold_step": 1.0,
-    "model_defs": classifiers,
-    "model_classes": model_classes,
+    "model_defs": classifiers, # see below
+    "model_classes": model_classes, # see below
     "selection_metric": {
         "method": "mean",
         "columns": ["1", "2", "3"],
         "maximize": True
     },
     "output_dir": "data/test_results"
+}
+# model defs are the sklearn models you want to use, and the parameters you want to try
+model_defs = {
+    LogisticRegression.__name__: {
+        "model": LogisticRegression(max_iter=1000, class_weight="balanced"),
+        "param_grid": {"clf__C": [0.01, 0.1, 1, 10]}
+    },
+    MultinomialNB.__name__: {
+        "model": MultinomialNB(),
+        "param_grid": {"clf__alpha": [0.1, 1.0, 5.0]}
+    },
+    RandomForestClassifier.__name__: {
+        "model": RandomForestClassifier(n_jobs=-1, class_weight="balanced"),
+        "param_grid": {
+            "clf__n_estimators": [100],
+            "clf__max_depth": [4, 8, None]
+        }
+    },
+    XGBClassifier.__name__: {
+        "model": XGBClassifier(
+            use_label_encoder=False,
+            eval_metric="logloss",
+            n_jobs=-1,
+            verbosity=0
+        ),
+        "param_grid": {
+            "clf__n_estimators": [100],
+            "clf__max_depth": [3, 6],
+            "clf__scale_pos_weight": [1, 2]
+        }
+    }
+}
+
+# model classes maps names to methods when evaluating models on the full grid
+model_classes = {
+    LogisticRegression.__name__: LogisticRegression,
+    RandomForestClassifier.__name__: RandomForestClassifier,
+    XGBClassifier.__name__: XGBClassifier,
+    MultinomialNB.__name__: MultinomialNB
 }
 ```
 
