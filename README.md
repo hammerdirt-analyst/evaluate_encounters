@@ -1,4 +1,4 @@
-# 🧪 Classification Pipeline for Binary classifiers
+# 🧪 Simple Pipeline for Binary classifiers
 
 **Author:** Roger Erismann
 **Purpose:** Estimate and evaluate exceedance probabilities using flexible, configurable classification models. Originally developed to model plastic shotgun-wadding encounters on Lake Geneva's beaches, this pipeline supports any binary classification task involving thresholds.
@@ -10,7 +10,7 @@ This repository provides a modular, extensible framework for evaluating the prob
 ### Core Capabilities:
 
 * Binary classification over cumulative thresholds
-* Model tuning and comparison using any scikit-learn-compatible classifier
+* Model tuning and comparison using scikit-learn-compatible classifier
 * Evaluation across full threshold ranges
 * Region-level or group-based summarization
 * Automated saving of results in `.csv` and `.json` formats
