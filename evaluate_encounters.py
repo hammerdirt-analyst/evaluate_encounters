@@ -33,6 +33,7 @@ from evaluate_encounters import evaluate_encounters
 evaluate_encounters()
 """
 import pandas as pd
+import numpy as np
 from matplotlib import pyplot as plt
 import seaborn as sns
 
@@ -206,17 +207,47 @@ def label_data(df, name):
 def combine(dfs: [pd.DataFrame]):
     new_df = pd.concat(dfs)
     return new_df
-
-def chart_test_results(df: pd.DataFrame, title: str, y_axis, x_axis, filename: str = None):
+from matplotlib.ticker import MultipleLocator
+def chart_test_results(melted: pd.DataFrame, title: str, y_axis, x_axis, filename: str = None):
     """ """
-    fig, ax = plt.subplots()
-    sns.lineplot(df, ax=ax)
-    xticks = ax.get_xticks()
-    xtick_labels = [f'> {tick}' for tick in xticks]
-    ax.set_xticklabels(xtick_labels)
-    ax.set_ylabel(y_axis)
-    ax.set_xlabel(x_axis)
 
+    # Plot
+    # Set up figure and axis
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    # Separate data
+    avg_data = melted[melted['lake'] == 'lake average']
+    lake_data = melted[melted['lake'] != 'lake average']
+
+    # Plot other lakes
+    sns.scatterplot(data=lake_data, x='threshold', y='Probability', hue='lake', marker="o", ax=ax)
+
+    # Plot lake average separately as black star
+    sns.scatterplot(data=avg_data, x='threshold', y='Probability', color='black', marker='*', s=140,
+                    label='Lake average', ax=ax)
+
+    # Title, labels, and limits
     ax.set_title(title)
+    ax.set_xlabel(x_axis)
+    ax.set_ylabel(y_axis)
+    ax.set_xlim(0, melted['threshold'].max())
+    ax.set_ylim(0, 1)
+
+
+    step_size = 0.01 if melted['threshold'].min() < 1 else 1
+    ax.xaxis.set_major_locator(MultipleLocator(base=step_size))
+
+    ax.yaxis.set_major_locator(MultipleLocator(0.1))
+    ax.yaxis.set_minor_locator(MultipleLocator(0.02))
+
+    ax.grid(True, which='major', linestyle='-')
+    ax.grid(True, which='minor', linestyle='--', alpha=0.3)
+
+    # Legend
+    ax.legend(title="Region")
+
+    # Save and show
+    plt.tight_layout()
+    plt.savefig(f"data/test_results/charts/{filename}")
     plt.show()
 
