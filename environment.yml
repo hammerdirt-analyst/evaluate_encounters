@@ -90,6 +90,7 @@ dependencies:
   - readline=8.2=h5eee18b_0
   - scikit-learn=1.6.1=py310h6a678d5_0
   - scipy=1.15.3=py310h525edd1_0
+  - seaborn=0.13.2=py310h06a4308_3
   - setuptools=78.1.1=py310h06a4308_0
   - sip=6.10.0=py310h6a678d5_0
   - six=1.17.0=py310h06a4308_0

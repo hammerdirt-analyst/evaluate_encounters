@@ -32,6 +32,9 @@ from evaluate_encounters import evaluate_encounters
 
 evaluate_encounters()
 """
+import pandas as pd
+from matplotlib import pyplot as plt
+import seaborn as sns
 
 import classifiers as clsf
 from logging_config import get_logger
@@ -195,4 +198,25 @@ def evaluate_encounters():
     e = clsf.ClassifierPipeline(df, date_split_rate_config)
     e.run()
     logger.info("End evaluation")
+
+def label_data(df, name):
+    df['split'] = name
+    return df
+
+def combine(dfs: [pd.DataFrame]):
+    new_df = pd.concat(dfs)
+    return new_df
+
+def chart_test_results(df: pd.DataFrame, title: str, y_axis, x_axis, filename: str = None):
+    """ """
+    fig, ax = plt.subplots()
+    sns.lineplot(df, ax=ax)
+    xticks = ax.get_xticks()
+    xtick_labels = [f'> {tick}' for tick in xticks]
+    ax.set_xticklabels(xtick_labels)
+    ax.set_ylabel(y_axis)
+    ax.set_xlabel(x_axis)
+
+    ax.set_title(title)
+    plt.show()
 
