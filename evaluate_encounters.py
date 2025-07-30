@@ -53,13 +53,13 @@ logger = get_logger("Run script", to_file='logs/classifiers.log')
 default_config = {
     "task": "classification",
     "target_column": "quantity",
-    "columns": ["region"],  # feature columns
+    "columns": ["region"],
 
     # preprocessing
     "categorical_cols": ["region"],
-    "numeric_cols": [],  # can be populated if numeric variables are used
+    "numeric_cols": [],
 
-    "summary_column": "region",  # used for summarizing probabilities
+    "summary_column": "region",
 
     "split": {
         "method": "date",
@@ -87,14 +87,13 @@ default_config = {
 random_split_count_config = {
     "task": "classification",
     "target_column": "quantity",
-    "columns": ["region"],  # feature columns
+    "columns": ["region"],
 
     # preprocessing
     "categorical_cols": ["region"],
-    "numeric_cols": [],  # can be populated if numeric variables are used
+    "numeric_cols": [],
 
-    "summary_column": "region",  # used for summarizing probabilities
-
+    "summary_column": "region",
     "split": {
         "method": "random",
         "test_size": 0.2
@@ -121,13 +120,13 @@ random_split_count_config = {
 random_split_rate_config = {
     "task": "classification",
     "target_column": "pcs/m",
-    "columns": ["region"],  # feature columns
+    "columns": ["region"],
 
     # preprocessing
     "categorical_cols": ["region"],
-    "numeric_cols": [],  # can be populated if numeric variables are used
+    "numeric_cols": [],
 
-    "summary_column": "region",  # used for summarizing probabilities
+    "summary_column": "region",
 
     "split": {
         "method": "random",
@@ -154,13 +153,13 @@ random_split_rate_config = {
 date_split_rate_config = {
     "task": "classification",
     "target_column": "pcs/m",
-    "columns": ["region"],  # feature columns
+    "columns": ["region"],
 
     # preprocessing
     "categorical_cols": ["region"],
-    "numeric_cols": [],  # can be populated if numeric variables are used
+    "numeric_cols": [],
 
-    "summary_column": "region",  # used for summarizing probabilities
+    "summary_column": "region",
 
     "split": {
         "method": "date",
@@ -202,33 +201,20 @@ def evaluate_encounters():
     e.run()
     logger.info("End evaluation")
 
-def label_data(df, name):
-    df['split'] = name
-    return df
-
-def combine(dfs: [pd.DataFrame]):
-    new_df = pd.concat(dfs)
-    return new_df
-
 def chart_test_results(melted: pd.DataFrame, title: str, y_axis, x_axis, filename: str = None):
-    """ """
+    """Method used for plotting the different predictions"""
 
-    # Plot
-    # Set up figure and axis
     fig, ax = plt.subplots(figsize=(10, 6))
 
-    # Separate data
     avg_data = melted[melted['lake'] == 'lake average']
     lake_data = melted[melted['lake'] != 'lake average']
 
-    # Plot other lakes
     sns.scatterplot(data=lake_data, x='threshold', y='Probability', hue='lake', marker="o", ax=ax)
 
-    # Plot lake average separately as black star
     sns.scatterplot(data=avg_data, x='threshold', y='Probability', color='black', marker='*', s=140,
                     label='Lake average', ax=ax)
 
-    # Title, labels, and limits
+
     ax.set_title(title)
     ax.set_xlabel(x_axis)
     ax.set_ylabel(y_axis)
@@ -255,6 +241,7 @@ def chart_test_results(melted: pd.DataFrame, title: str, y_axis, x_axis, filenam
 
 
 def chart_historical_leman(dfx, dfy):
+    """Method used for plotting historical survey results"""
     fig, ax = plt.subplots(figsize=(10, 6))
     dfx['date'] = pd.to_datetime(dfx['date'])
     dfy['date'] = pd.to_datetime(dfy['date'])
@@ -263,19 +250,16 @@ def chart_historical_leman(dfx, dfy):
     ax.xaxis.set_major_locator(mdates.YearLocator())
     ax.xaxis.set_minor_locator(mdates.MonthLocator(bymonth=(1, 7)))
 
-    # Optional: Improve tick formatting
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
     ax.tick_params(axis='x', which='major', length=10)
     ax.tick_params(axis='x', which='minor', length=5)
 
     ax.tick_params(axis='both', which='major', labelsize=12)
 
-    # Rotate x-axis labels for clarity
     plt.setp(ax.get_xticklabels(), rotation=0, ha='center')
 
     ax.set_title("Lake Geneva plastic shotgun wadding: found on the beach 2015 - 2022", loc='left', fontsize=14)
 
-    # Set labels and title if needed
     ax.set_xlabel('Date', fontsize=14, labelpad=14)
     ax.set_ylabel('pcs/m', fontsize=14, labelpad=14)
     ax.legend()
@@ -285,6 +269,7 @@ def chart_historical_leman(dfx, dfy):
 
 
 def chart_ecdfs(dfx, dfy, predictions):
+    """Method used for plotting ecdfs results"""
     fig, ax = plt.subplots()
     sns.ecdfplot(dfx['pcs/m'], label='2015 - 2021', color='goldenrod')
     sns.ecdfplot(dfy['pcs/m'], label='2022', color='magenta')
