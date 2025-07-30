@@ -1,7 +1,7 @@
 # 🧪 Simple Pipeline for Binary classifiers
 
 **Author:** Roger Erismann
-**Purpose:** Estimate and evaluate exceedance probabilities using flexible, configurable classification models. Originally developed to model plastic shotgun-wadding encounters on Lake Geneva's beaches, this pipeline supports any binary classification task involving thresholds.
+**Purpose:** Estimate and evaluate exceedance probabilities using configurable classification models. Originally developed to model plastic shotgun-wadding encounters on Lake Geneva's beaches, this pipeline supports any binary classification task involving thresholds.
 
 ## 🚀 Overview
 
