@@ -41,6 +41,8 @@ import classifiers as clsf
 from logging_config import get_logger
 import warnings
 from sklearn.exceptions import UndefinedMetricWarning
+from matplotlib.ticker import MultipleLocator
+import matplotlib.dates as mdates
 
 logger = get_logger("Run script", to_file='logs/classifiers.log')
 
@@ -207,7 +209,7 @@ def label_data(df, name):
 def combine(dfs: [pd.DataFrame]):
     new_df = pd.concat(dfs)
     return new_df
-from matplotlib.ticker import MultipleLocator
+
 def chart_test_results(melted: pd.DataFrame, title: str, y_axis, x_axis, filename: str = None):
     """ """
 
@@ -251,3 +253,50 @@ def chart_test_results(melted: pd.DataFrame, title: str, y_axis, x_axis, filenam
     plt.savefig(f"data/test_results/charts/{filename}")
     plt.show()
 
+
+def chart_historical_leman(dfx, dfy):
+    fig, ax = plt.subplots(figsize=(10, 6))
+    dfx['date'] = pd.to_datetime(dfx['date'])
+    dfy['date'] = pd.to_datetime(dfy['date'])
+    sns.scatterplot(dfx, x='date', y='pcs/m', label='2015 - 2021', ax=ax, color='goldenrod', marker='x', s=60)
+    sns.scatterplot(dfy, x='date', y='pcs/m', label='2022', ax=ax, color='magenta', marker='x', s=60)
+    ax.xaxis.set_major_locator(mdates.YearLocator())
+    ax.xaxis.set_minor_locator(mdates.MonthLocator(bymonth=(1, 7)))
+
+    # Optional: Improve tick formatting
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
+    ax.tick_params(axis='x', which='major', length=10)
+    ax.tick_params(axis='x', which='minor', length=5)
+
+    ax.tick_params(axis='both', which='major', labelsize=12)
+
+    # Rotate x-axis labels for clarity
+    plt.setp(ax.get_xticklabels(), rotation=0, ha='center')
+
+    ax.set_title("Lake Geneva plastic shotgun wadding: found on the beach 2015 - 2022", loc='left', fontsize=14)
+
+    # Set labels and title if needed
+    ax.set_xlabel('Date', fontsize=14, labelpad=14)
+    ax.set_ylabel('pcs/m', fontsize=14, labelpad=14)
+    ax.legend()
+    plt.tight_layout()
+    plt.savefig('historical_leman.jpg', dpi=300)
+    plt.show()
+
+
+def chart_ecdfs(dfx, dfy, predictions):
+    fig, ax = plt.subplots()
+    sns.ecdfplot(dfx['pcs/m'], label='2015 - 2021', color='goldenrod')
+    sns.ecdfplot(dfy['pcs/m'], label='2022', color='magenta')
+    sns.lineplot(data=predictions, x='threshold', y='ecdf', ax=ax, label='Predicted', color='black', linestyle='--')
+    ax.set_xlim(-0.01, 0.35)
+    ax.set_title(
+        'The previous and expected cumulative distribution of the\n minimum number of plastic shotgun wadding on the\n shoreline. Lake Geneva 2015 - 2022',
+        loc='left')
+    ax.set_ylabel('Cumulative probability', labelpad=12, fontsize=12)
+    ax.set_xlabel('Plastic shotgun wadding for 100 meters', labelpad=12, fontsize=12)
+    ax.axvline(x=0.06, label='0.06 pcs/m,  (75th percentile)', linestyle='-.')
+    ax.legend()
+    plt.tight_layout()
+    plt.savefig('ecdfs_predicted_previous.jpg', dpi=300)
+    plt.show()
