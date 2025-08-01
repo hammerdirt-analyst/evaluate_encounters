@@ -242,7 +242,7 @@ def chart_test_results(melted: pd.DataFrame, title: str, y_axis, x_axis, filenam
 
 def chart_historical_leman(dfx, dfy):
     """Method used for plotting historical survey results"""
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(8, 6))
     dfx['date'] = pd.to_datetime(dfx['date'])
     dfy['date'] = pd.to_datetime(dfy['date'])
     sns.scatterplot(dfx, x='date', y='pcs/m', label='2015 - 2021', ax=ax, color='goldenrod', marker='x', s=60)
@@ -254,14 +254,14 @@ def chart_historical_leman(dfx, dfy):
     ax.tick_params(axis='x', which='major', length=10)
     ax.tick_params(axis='x', which='minor', length=5)
 
-    ax.tick_params(axis='both', which='major', labelsize=12)
+    ax.tick_params(axis='both', which='major', labelsize=14)
 
     plt.setp(ax.get_xticklabels(), rotation=0, ha='center')
 
-    ax.set_title("Lake Geneva plastic shotgun wadding: found on the beach 2015 - 2022", loc='left', fontsize=14)
+    # ax.set_title("Lake Geneva plastic shotgun wadding: found on the beach 2015 - 2022", loc='left', fontsize=14)
 
     ax.set_xlabel('Date', fontsize=14, labelpad=14)
-    ax.set_ylabel('pcs/m', fontsize=14, labelpad=14)
+    ax.set_ylabel('Density / PW m‒1', fontsize=14, labelpad=14)
     ax.legend()
     plt.tight_layout()
     plt.savefig('historical_leman.jpg', dpi=300)
@@ -275,12 +275,13 @@ def chart_ecdfs(dfx, dfy, predictions):
     sns.ecdfplot(dfy['pcs/m'], label='2022', color='magenta')
     sns.lineplot(data=predictions, x='threshold', y='ecdf', ax=ax, label='Predicted', color='black', linestyle='--')
     ax.set_xlim(-0.01, 0.35)
-    ax.set_title(
-        'The previous and expected cumulative distribution of the\n minimum number of plastic shotgun wadding on the\n shoreline. Lake Geneva 2015 - 2022',
-        loc='left')
-    ax.set_ylabel('Cumulative probability', labelpad=12, fontsize=12)
-    ax.set_xlabel('Plastic shotgun wadding for 100 meters', labelpad=12, fontsize=12)
-    ax.axvline(x=0.06, label='0.06 pcs/m,  (75th percentile)', linestyle='-.')
+    # ax.set_title(
+    #     'The previous and expected cumulative distribution of the\n minimum number of plastic shotgun wadding on the\n shoreline. Lake Geneva 2015 - 2022',
+    #     loc='left')
+    ax.set_ylabel('Cumulative probability', labelpad=14, fontsize=14)
+    ax.set_xlabel('Plastic shotgun wadding per meter - Density / PW m‒1', labelpad=14, fontsize=14)
+    ax.axvline(x=0.06, label='0.06 PW m‒1,  (75th percentile)', linestyle='-.')
+    ax.tick_params(axis='both', which='major', labelsize=14)
     ax.legend()
     plt.tight_layout()
     plt.savefig('ecdfs_predicted_previous.jpg', dpi=300)
